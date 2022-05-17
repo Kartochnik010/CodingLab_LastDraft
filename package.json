@@ -1,0 +1,15 @@
+{
+  "name": "codinglab_lastdraft",
+  "version": "1.0.0",
+  "description": "",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "react-scripts start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kartochnik010/CodingLab_LastDraft.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
