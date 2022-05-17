@@ -4,12 +4,19 @@
   "description": "",
   "main": "backend/server.js",
   "scripts": {
-    "start": "react-scripts start"
+    "start": "concurrently \"node backend/server.js\" \"cd frontend/ && npm start\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kartochnik010/CodingLab_LastDraft.git"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kartochnik010/CodingLab_LastDraft/issues"
+  },
+  "homepage": "https://github.com/Kartochnik010/CodingLab_LastDraft#readme",
+  "dependencies": {
+    "concurrently": "^7.2.0"
+  }
 }
