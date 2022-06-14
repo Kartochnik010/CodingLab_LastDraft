@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 let Todo = new Schema({
+  todoDate: {
+    type: String
+  },
   todoDesc: {
     type: String
   },

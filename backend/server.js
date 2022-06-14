@@ -1,42 +1,54 @@
+//importing necessary dependencies
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const todoRoutes = express.Router();
+
+//port to run the server
 const PORT = 4000;
 
-let Todo = require("./todo.model");
+// importing models for working with MongoDB
+let Todo = require("./models/todo.model");
 
+//applying middleware for additional support
 app.use(cors());
 app.use(bodyParser.json());
 
+//connecting to database
 mongoose.connect("mongodb+srv://root:0000@cluster0.qaotl.mongodb.net/?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true });
 const connection = mongoose.connection;
 
+//once connection was successfully established it will log a message in console
 connection.once("open", function() {
   console.log("mongoDB connection successful");
 });
 
-todoRoutes.route("/").get(function(req, res) {
-  Todo.find(function(err, todos) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(todos);
-    }
-  });
+//backend routing and rendering
+todoRoutes
+    .route("/")
+    .get(function(req, res) {
+        Todo.find(function(err, todos) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(todos);
+        }
+    });
 });
 
-todoRoutes.route("/:id").get(function(req, res) {
-  let id = req.params.id;
-  Todo.findById(id, function(err, todo) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.json(todo);
-    }
-  });
+todoRoutes
+    .route("/:id")
+    .get(function(req, res) {
+      let id = req.params.id;
+      Todo.findById(id, function(err, todo) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.json(todo);
+        }
+    });
 });
 
 todoRoutes.route("/add").post(function(req, res) {
@@ -62,35 +74,46 @@ todoRoutes.route("/delete/:id").post(function(req, res) {
   });
 });
 
-todoRoutes.route("/update/:id").post(function(req, res) {
-  Todo.findById(req.params.id, function(err, todo) {
-    if (!todo) {
-      res.status(404).send("todo not found");
-    } else {
-      const {
-        todoDesc,
-        todoCompleted,
-        todoResponsible,
-        todoPriority
-      } = req.body;
-      todo.todoDesc = todoDesc;
-      todo.todoCompleted = todoCompleted;
-      todo.todoResponsible = todoResponsible;
-      todo.todoPriority = todoPriority;
-      todo.save((err, todo) => {
-        if (err) {
-          console.log(err);
-          res.status(400).send("updating todo failed");
+//example of post method supported by express
+todoRoutes
+    //choosing a route
+    .route("/update/:id")
+    //writing the logic for the post method
+    .post(function(req, res) {
+      Todo.findById(req.params.id, function(err, todo) {
+        if (!todo) {
+          //if tоdo does not exist then it will throw an error
+          res.status(404).send("todo not found");
         } else {
-          res.status(200).json({ todo: "todo updated" });
+          const {
+            //extracting data using body-parser
+            todoDesc,
+            todoCompleted,
+            todoResponsible,
+            todoPriority
+          } = req.body;
+          //rewriting data
+          todo.todoDesc = todoDesc;
+          todo.todoCompleted = todoCompleted;
+          todo.todoResponsible = todoResponsible;
+          todo.todoPriority = todoPriority;
+          //saving new data to database
+          todo.save((err, todo) => {
+            if (err) {
+              console.log(err);
+              res.status(400).send("updating todo failed");
+            } else {
+              res.status(200).json({ todo: "todo updated" });
+            }
+          });
         }
       });
-    }
-  });
 });
 
 app.use("/todos", todoRoutes);
 
+
+//setting up the server
 app.listen(PORT, function() {
   console.log("Server running on PORT: " + PORT);
 });

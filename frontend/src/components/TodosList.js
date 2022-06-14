@@ -4,20 +4,27 @@ import axios from "axios";
 import Todo from "./Todo";
 
 export default function TodosList() {
+  //using default useState hook to define todos
   const [todos, setTodos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  //fetching todos from out backend API using axios get method
   function fetchTodos() {
     axios
+      //  GET method from local server
       .get("http://localhost:4000/todos")
+      // once GET method has been successfully completed it will set the
+        // data from backend to previously defined todos
       .then(res => {
         setTodos(res.data);
       })
+      // if GET method fails it will catch an error and log it in console
       .catch(err => {
         console.log(err);
       });
   }
-
+  //useEffect hook will run commands as page is loaded
+  //meaning it will automatically fetch necessary data
   useEffect(() => {
     fetchTodos();
     setIsLoading(false);
@@ -32,7 +39,7 @@ export default function TodosList() {
         <thead>
           <tr>
             <th>Description</th>
-            <th>Responsiblity</th>
+            <th>Responsibility</th>
             <th>Priority</th>
             <th>Actions</th>
           </tr>

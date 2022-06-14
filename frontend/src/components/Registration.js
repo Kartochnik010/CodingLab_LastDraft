@@ -3,8 +3,8 @@ import axios from "axios";
 
 import Todo from "./Todo";
 
-export default function TodosList() {
-    const [todos, setTodos] = useState([]);
+export default function Registration() {
+    const [newUser, createNewUser] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
     function fetchTodos() {
