@@ -1,10 +1,14 @@
 import React, {useState} from "react";
+import {AuthApi} from "./AuthApi";
+import Cookie from "js-cookie"
 
 export const PersonalTodosList = () => {
-    const handleLogout = () => {
-        Cookies.remove('user')
-        Auth.setAuth(false)
 
+    const Auth = React.useContext(AuthApi)
+
+    const handleLogout = () => {
+        Cookie.remove('user')
+        Auth.setAuth(false)
     }
 
   return (

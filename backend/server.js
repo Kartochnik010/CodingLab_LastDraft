@@ -11,13 +11,14 @@ const PORT = 4000;
 
 // importing models for working with MongoDB
 let Todo = require("./models/todo.model");
+let User = require("./models/user.model")
 
 //applying middleware for additional support
 app.use(cors());
 app.use(bodyParser.json());
 
 //connecting to database
-mongoose.connect("mongodb+srv://root:0000@cluster0.qaotl.mongodb.net/?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect("mongodb+srv://root:0000@cluster0.qaotl.mongodb.net/todo?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true });
 const connection = mongoose.connection;
 
 //once connection was successfully established it will log a message in console
@@ -38,6 +39,63 @@ todoRoutes
     });
 });
 
+//user routing
+todoRoutes
+    .route("/user")
+    .get((req, res) =>{
+        User.find((err, users) => {
+              if (err) {
+                  console.log(err);
+              } else {
+                  res.json(users);
+              }
+          })
+
+    })
+
+todoRoutes
+    .route("/user/:name")
+    .get(function(req, res) {
+        let name = req.params.name;
+        User.find({name: name}, function(err, user) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(user);
+            }
+        });
+    });
+
+todoRoutes
+    .route("/user/registration")
+    .post((req, res) =>{
+      let user = new User(req.body);
+      user.save((err, user) => {
+        if (err) {
+          console.log(err);
+          res.status(400).send("creating user failed");
+        } else {
+          res.status(200).json({ todo: "user added" });
+        }
+      });
+    })
+
+
+
+todoRoutes
+    .route("/add")
+    .post(function(req, res) {
+      let todo = new Todo(req.body);
+      todo.save((err, todo) => {
+        if (err) {
+          console.log(err);
+          res.status(400).send("adding todo failed");
+        } else {
+          res.status(200).json({ todo: "todo added" });
+        }
+      });
+    });
+
 todoRoutes
     .route("/:id")
     .get(function(req, res) {
@@ -48,20 +106,8 @@ todoRoutes
         } else {
           res.json(todo);
         }
+      });
     });
-});
-
-todoRoutes.route("/add").post(function(req, res) {
-  let todo = new Todo(req.body);
-  todo.save((err, todo) => {
-    if (err) {
-      console.log(err);
-      res.status(400).send("adding todo failed");
-    } else {
-      res.status(200).json({ todo: "todo added" });
-    }
-  });
-});
 
 todoRoutes.route("/delete/:id").post(function(req, res) {
   Todo.deleteOne({ _id: req.params.id }, err => {

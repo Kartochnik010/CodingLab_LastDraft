@@ -35,10 +35,14 @@ const Routes = () => {
     const Auth = React.useContext(AuthApi)
   return(
       <Switch>
-          <ProtectedLogin path="/login" auth={Auth.auth} component={Login} />
+          <ProtectedLogin path="/user/login" auth={Auth.auth} component={Login} />
+
+          <Route path="/edit/:id" component={EditTodo} />
+          <Route path="/create" component={CreateTodo} />
           <Route path="/" exact component={TodosList} />
-          <Route path="/registration" component={Register} />
-          <ProtectedRoute path="/dashboard" auth={Auth.auth} component={PersonalTodosList} />
+
+          <Route path="/user/registration" component={Register} />
+          <ProtectedRoute path="/user/dashboard" auth={Auth.auth} component={PersonalTodosList} />
       </Switch>
   )
 }
@@ -50,7 +54,7 @@ const ProtectedRoute = ({auth, component:Component, ...rest}) => {
             render={ () => auth ? (
                 <Component/>
             ) : (
-                <Redirect to="/login"/>
+                <Redirect to="/user/login"/>
             )
         }/>
     )
@@ -64,7 +68,7 @@ const ProtectedLogin = ({auth, component:Component, ...rest}) => {
             <Component/>
         ) :
             (
-                <Redirect to="/dashboard"/>
+                <Redirect to="/user/dashboard"/>
             )
         } />
     )
