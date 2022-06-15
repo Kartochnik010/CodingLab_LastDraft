@@ -19,11 +19,12 @@ function App() {
     return (
         <AuthApi.Provider value={{auth,setAuth}}>
             <Router>
-
+                <div>
+                    <Nav />
                     <div  className={"mx-5"}>
-                        <Nav />
                         <RoutesForLife />
                     </div>
+                </div>
             </Router>
         </AuthApi.Provider>
     );

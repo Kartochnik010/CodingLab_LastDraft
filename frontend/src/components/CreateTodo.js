@@ -28,9 +28,13 @@ export default function CreateTodo({ history }) {
     console.log(newTodo)
     axios
       .post("http://localhost:4000/todos/add", newTodo)
-      .then(res => console.log(res.data))
-        .then(() => history.push("/"));
+      .then(res => {
+        console.log(res.data)
+        window.location = "/user/dashboard"
+      })
+
   };
+
 
   return (
     <div style={{ marginTop: 20 }}>

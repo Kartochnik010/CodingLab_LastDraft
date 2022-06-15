@@ -47,7 +47,6 @@ export default function TodosList() {
   ) : todos.length ? (
     <div>
       <h2>Welcome, {""+Cookie.get('user')}! Here are your todos</h2>
-      <p>You also need to create calendar</p>
         <Calendarik />
       <table className="table table-striped" style={{ marginTop: 20 }}>
         <thead>

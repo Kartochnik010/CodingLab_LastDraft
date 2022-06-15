@@ -17,24 +17,24 @@ export const Register = () => {
             email,
             password,
         };
+            axios
+                .get(`http://localhost:4000/todos/user/${name}`)
+                .then(res =>{
+                    if (res.data.length > 0) {
+                        alert("This name or email is already taken!")
+                    } else {
+                        axios
+                            .post("http://localhost:4000/todos/user/registration", newUser)
+                            .then(res => console.log(res.data))
+                            .catch(e => {console.log(e)})
 
-        axios
-            .get(`http://localhost:4000/todos/user/${name}`)
-            .then(res =>{
-                if (res.data.length > 0) {
-                    console.log("num of users with the same name is bigger than 1")
-                } else {
-                    axios
-                        .post("http://localhost:4000/todos/user/registration", newUser)
-                        .then(res => console.log(res.data))
-                        .catch(e => {console.log(e)})
 
+                        Cookie.set('user', name)
+                        console.log(name)
+                        Auth.setAuth(true)
+                    }
+                })
 
-                    Cookie.set('user', name)
-                    console.log(name)
-                    Auth.setAuth(true)
-                }
-            })
 
     };
 
@@ -107,10 +107,14 @@ export const Login = () => {
         axios
             .get(`http://localhost:4000/todos/user/${name}`)
             .then(res => {
+                try {
                 const [ { password } ] = res.data
-                if (password === passwordForm) {
-                    Cookie.set("user", name)
-                    Auth.setAuth(true)
+                    if (password === passwordForm) {
+                        Cookie.set("user", name)
+                        Auth.setAuth(true)
+                    }
+                } catch (e) {
+                    alert("Incorrect name or password!")
                 }
             })
 
