@@ -2,20 +2,17 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 let Todo = new Schema({
-  todoDate: {
+  todoOwner: {
+    type: String
+  },
+  todoName: {
     type: String
   },
   todoDesc: {
     type: String
   },
-  todoResponsible: {
+  todoDate: {
     type: String
-  },
-  todoPriority: {
-    type: String
-  },
-  todoCompleted: {
-    type: Boolean
   }
 });
 

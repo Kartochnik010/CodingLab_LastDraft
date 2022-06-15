@@ -39,6 +39,7 @@ todoRoutes
     });
 });
 
+
 //user routing
 todoRoutes
     .route("/user")
@@ -97,8 +98,22 @@ todoRoutes
     });
 
 todoRoutes
+    .route("/name/:owner")
+    .get(function(req, res) {
+        let owner = req.params.owner;
+        Todo.find({todoOwner: owner}, function(err, todo) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.json(todo);
+            }
+        });
+    });
+
+todoRoutes
     .route("/:id")
     .get(function(req, res) {
+        console.log(req.params)
       let id = req.params.id;
       Todo.findById(id, function(err, todo) {
         if (err) {

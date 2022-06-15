@@ -8,6 +8,7 @@ export const Register = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const Auth = React.useContext(AuthApi)
 
     const onSubmit = e => {
         e.preventDefault();
@@ -16,10 +17,25 @@ export const Register = () => {
             email,
             password,
         };
+
         axios
-            .post("http://localhost:4000/todos/user/registration", newUser)
-            .then(res => console.log(res.data))
-            .then(() => history.push("/"));
+            .get(`http://localhost:4000/todos/user/${name}`)
+            .then(res =>{
+                if (res.data.length > 0) {
+                    console.log("num of users with the same name is bigger than 1")
+                } else {
+                    axios
+                        .post("http://localhost:4000/todos/user/registration", newUser)
+                        .then(res => console.log(res.data))
+                        .catch(e => {console.log(e)})
+
+
+                    Cookie.set('user', name)
+                    console.log(name)
+                    Auth.setAuth(true)
+                }
+            })
+
     };
 
     return (
@@ -67,6 +83,11 @@ export const Register = () => {
                     />
                 </div>
             </form>
+
+            <div >
+
+            </div>
+
             <br/>
             <Link to={"Login"}>Already have an account?</Link>
         </div>
@@ -74,10 +95,26 @@ export const Register = () => {
 }
 
 export const Login = () => {
+
+
+    const [name, setName] = useState("")
+    const [passwordForm, setPasswordForm] = useState("")
+
     const Auth = React.useContext(AuthApi)
-    const handleLogin = () => {
-        Cookie.set("user","loginTrue")
-        Auth.setAuth(true)
+
+    const handleLogin = (e) => {
+        e.preventDefault()
+        axios
+            .get(`http://localhost:4000/todos/user/${name}`)
+            .then(res => {
+                const [ { password } ] = res.data
+                if (password === passwordForm) {
+                    Cookie.set("user", name)
+                    Auth.setAuth(true)
+                }
+            })
+
+
     }
     const readCookie = () => {
       const user = Cookie.get("user")
@@ -91,7 +128,36 @@ export const Login = () => {
     return (
         <div>
             <h2>Login</h2>
-            <button onClick={handleLogin}>Login</button>
+            <form onSubmit={handleLogin} className={"form-group"}>
+                <div className="form-group">
+                    <label>Name: </label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        placeholder={"Name"}
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Password: </label>
+                    <input
+                        type="password"
+                        className="form-control"
+                        placeholder={"Password"}
+                        value={passwordForm}
+                        onChange={e => setPasswordForm(e.target.value)}
+                    />
+                </div>
+                <div className={"form-group"}>
+                    <input
+                        type="submit"
+                        className="btn btn-primary"
+                        value="Login"
+                    />
+                </div>
+            </form>
+
             <br/> <br/>
             <Link to={'Registration'}>Don't have an account?</Link>
         </div>

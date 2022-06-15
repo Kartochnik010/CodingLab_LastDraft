@@ -9,7 +9,6 @@ import EditTodo from "./components/EditTodo";
 import Nav from "./components/Nav";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import {PersonalTodosList} from "./components/PersonalTodosList";
 import {Login, Register} from "./components/Register";
 import {AuthApi} from "./components/AuthApi";
 
@@ -20,9 +19,10 @@ function App() {
     return (
         <AuthApi.Provider value={{auth,setAuth}}>
             <Router>
-                <Nav />
+
                     <div  className={"mx-5"}>
-                        <Routes />
+                        <Nav />
+                        <RoutesForLife />
                     </div>
             </Router>
         </AuthApi.Provider>
@@ -31,33 +31,20 @@ function App() {
 
 
 
-const Routes = () => {
+const RoutesForLife = () => {
     const Auth = React.useContext(AuthApi)
   return(
       <Switch>
+
+          <ProtectedRoute path="/edit/:id" auth={Auth.auth} component={EditTodo} />
+          <ProtectedRoute path="/create" auth={Auth.auth} component={CreateTodo} />
+          <ProtectedRoute path="/" auth={Auth.auth} exact component={TodosList} />
+
           <ProtectedLogin path="/user/login" auth={Auth.auth} component={Login} />
-
-          <Route path="/edit/:id" component={EditTodo} />
-          <Route path="/create" component={CreateTodo} />
-          <Route path="/" exact component={TodosList} />
-
-          <Route path="/user/registration" component={Register} />
-          <ProtectedRoute path="/user/dashboard" auth={Auth.auth} component={PersonalTodosList} />
+          <ProtectedLogin path="/user/registration" auth={Auth.auth} component={Register} />
+          <ProtectedRoute path="/user/dashboard" auth={Auth.auth} component={TodosList} />
       </Switch>
   )
-}
-
-const ProtectedRoute = ({auth, component:Component, ...rest}) => {
-    return(
-        <Route
-            {...rest}
-            render={ () => auth ? (
-                <Component/>
-            ) : (
-                <Redirect to="/user/login"/>
-            )
-        }/>
-    )
 }
 
 const ProtectedLogin = ({auth, component:Component, ...rest}) => {
@@ -71,6 +58,19 @@ const ProtectedLogin = ({auth, component:Component, ...rest}) => {
                 <Redirect to="/user/dashboard"/>
             )
         } />
+    )
+}
+
+const ProtectedRoute = ({auth, component:Component, ...rest}) => {
+    return(
+        <Route
+            {...rest}
+            render={ () => auth ? (
+                <Component/>
+            ) : (
+                <Redirect to="/user/login"/>
+            )
+            }/>
     )
 }
 

@@ -10,9 +10,7 @@ export default function Nav() {
       <div className="" id="navbarText">
         <ul className="navbar-nav ml-auto" style={{ display: "inline-block" }}>
           <li className="nav-item mr-4" style={{ display: "inline-block" }}>
-            <Link className="nav-link" to="/create">
-              Create
-            </Link>
+
           </li>
         </ul>
       </div>

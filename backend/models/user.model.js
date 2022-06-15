@@ -7,14 +7,16 @@ const Schema = mongoose.Schema;
 // This is how the actual schema looks like
 let User = new Schema({
     email: {
-
+        unique: true,
         // we define the type of the data that is going to be used
         type: String
     },
     name: {
+        unique: true,
         type: String
     },
     password: {
+        unique: false,
         type: String
     }
 });

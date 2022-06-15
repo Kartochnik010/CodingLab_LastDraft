@@ -1,0 +1,12 @@
+.container {
+    position: relative;
+    width: 400px;
+    min-height: 400px;
+    background: #fff;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+}

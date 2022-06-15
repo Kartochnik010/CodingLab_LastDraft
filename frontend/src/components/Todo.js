@@ -1,19 +1,29 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 export default function Todo({ todo }) {
-  return (
-    <tr>
-      <td className={todo.todoCompleted ? "completed" : ""}>{todo.todoDesc}</td>
-      <td className={todo.todoCompleted ? "completed" : ""}>
-        {todo.todoResponsible}
-      </td>
-      <td className={todo.todoCompleted ? "completed" : ""}>
-        {todo.todoPriority}
-      </td>
-      <td>
-        <Link to={`/edit/${todo._id}`}>Edit</Link>
-      </td>
-    </tr>
-  );
+    const deleteTodo = e => {
+        // e.preventDefault();
+        axios
+            .post(`http://localhost:4000/todos/delete/${todo._id}`)
+            .then(res => console.log(res.data))
+    };
+
+    return (
+        <tr>
+            <td className={todo.todoCompleted ? "completed" : ""}>{todo.todoName}</td>
+            <td className={todo.todoCompleted ? "completed" : ""}>
+                {todo.todoDesc}
+            </td>
+            <td className={todo.todoCompleted ? "completed" : ""}>
+                {todo.todoDate}
+            </td>
+            <td>
+                <form onSubmit={deleteTodo}>
+                    <button className={"btn btn-sm btn-outline-primary"}>Delete</button>
+                </form>
+            </td>
+        </tr>
+    );
 }
